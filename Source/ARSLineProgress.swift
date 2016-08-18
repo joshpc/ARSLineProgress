@@ -708,7 +708,7 @@ private func ars_presentLoader(_ loader: ARSLoader, onView view: UIView?, comple
     ars_currentLoader = loader
 	
 	let emptyView = loader.emptyView
-	emptyView.backgroundColor = .clear()
+	emptyView.backgroundColor = .clear
 	emptyView.frame = loader.backgroundView.bounds
 	emptyView.addSubview(loader.backgroundView)
     

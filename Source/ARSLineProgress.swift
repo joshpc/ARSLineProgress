@@ -41,7 +41,7 @@ public final class ARSLineProgress: NSObject {
         if !shown { ARSInfiniteLoader().showOnView(nil, completionBlock: nil) }
     }
     
-    public static func showWithPresentCompetionBlock(_ block: () -> Void) {
+    public static func showWithPresentCompetionBlock(_ block: (() -> Void)) {
         if !shown { ARSInfiniteLoader().showOnView(nil, completionBlock: block) }
     }
     
@@ -49,7 +49,7 @@ public final class ARSLineProgress: NSObject {
         if !shown { ARSInfiniteLoader().showOnView(view, completionBlock: nil) }
     }
     
-    public static func showOnView(_ view: UIView, completionBlock: () -> Void) {
+    public static func showOnView(_ view: UIView, completionBlock: (() -> Void)) {
         if !shown { ARSInfiniteLoader().showOnView(view, completionBlock: completionBlock) }
     }
     
@@ -126,7 +126,7 @@ public final class ARSLineProgress: NSObject {
     }
     
     /// <code>completionBlock</code> is going to be called on the main queue
-    public static func hideWithCompletionBlock(_ block: () -> Void) {
+    public static func hideWithCompletionBlock(_ block: (() -> Void)) {
         ars_hideLoader(ars_currentLoader, withCompletionBlock: block)
     }
     
@@ -297,12 +297,12 @@ private extension ARSInfiniteLoader {
         
         targetView = view
         
-        ars_createCircles(outerCircle: outerCircle,
+        ars_createCircles(outerCircle,
             middleCircle: middleCircle,
             innerCircle: innerCircle,
             onView: backgroundView.contentView,
             loaderType: .infinite)
-        ars_animateCircles(outerCircle: outerCircle, middleCircle: middleCircle, innerCircle: innerCircle)
+        ars_animateCircles(outerCircle, middleCircle: middleCircle, innerCircle: innerCircle)
         ars_presentLoader(self, onView: view, completionBlock: completionBlock)
     }
     
@@ -368,12 +368,12 @@ private extension ARSProgressLoader {
         ars_currentCompletionBlock = completionBlock
         targetView = view
         
-        ars_createCircles(outerCircle: outerCircle,
+        ars_createCircles(outerCircle,
             middleCircle: middleCircle,
             innerCircle: innerCircle,
             onView: backgroundView.contentView,
             loaderType: .progress)
-        ars_animateCircles(outerCircle: outerCircle, middleCircle: middleCircle, innerCircle: innerCircle)
+        ars_animateCircles(outerCircle, middleCircle: middleCircle, innerCircle: innerCircle)
         ars_presentLoader(self, onView: view, completionBlock: nil)
         launchTimer()
     }
@@ -558,7 +558,7 @@ private final class ARSStatus: ARSLoader {
     
 }
 
-private extension ARSStatus {
+extension ARSStatus {
     
     static func drawSuccess(_ backgroundView: UIVisualEffectView) {
         let backgroundViewBounds = backgroundView.bounds
@@ -693,7 +693,7 @@ private struct ARSBlurredBackgroundRect {
 // MARK: - Extensions & Helpers & Shared Methods
 // =====================================================================================================================
 
-private func ars_stopCircleAnimations(_ loader: ARSLoader, completionBlock: () -> Void) {
+private func ars_stopCircleAnimations(_ loader: ARSLoader, completionBlock: (() -> Void)) {
     
     CATransaction.begin()
     CATransaction.setAnimationDuration(0.25)
@@ -774,7 +774,7 @@ private func ars_createdFrameForBackgroundView(_ backgroundView: UIView, onView 
     return true
 }
 
-private func ars_createCircles(outerCircle: CAShapeLayer, middleCircle: CAShapeLayer, innerCircle: CAShapeLayer, onView view: UIView, loaderType: ARSLoaderType) {
+private func ars_createCircles(_ outerCircle: CAShapeLayer, middleCircle: CAShapeLayer, innerCircle: CAShapeLayer, onView view: UIView, loaderType: ARSLoaderType) {
     let circleRadiusOuter = ARS_CIRCLE_RADIUS_OUTER
     let circleRadiusMiddle = ARS_CIRCLE_RADIUS_MIDDLE
     let circleRadiusInner = ARS_CIRCLE_RADIUS_INNER
@@ -841,7 +841,7 @@ private func ars_configureLayer(_ layer: CAShapeLayer, forView view: UIView, wit
     view.layer.addSublayer(layer)
 }
 
-private func ars_animateCircles(outerCircle: CAShapeLayer, middleCircle: CAShapeLayer, innerCircle: CAShapeLayer) {
+private func ars_animateCircles(_ outerCircle: CAShapeLayer, middleCircle: CAShapeLayer, innerCircle: CAShapeLayer) {
     ars_dispatchOnMainQueue {
         let outerAnimation = CABasicAnimation(keyPath: "transform.rotation")
         outerAnimation.toValue = ARS_CIRCLE_ROTATION_TO_VALUE
@@ -873,11 +873,11 @@ private extension UIColor {
     
 }
 
-private func ars_dispatchAfter(_ time: Double, block: ()->()) {
+private func ars_dispatchAfter(_ time: Double, block: @escaping ()->()) {
     let dispatchTime = DispatchTime.now() + Double(Int64(time * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
     DispatchQueue.main.asyncAfter(deadline: dispatchTime, execute: block)
 }
 
-private func ars_dispatchOnMainQueue(_ block: ()->()) {
+private func ars_dispatchOnMainQueue(_ block: @escaping ()->()) {
     DispatchQueue.main.async(execute: block)
 }

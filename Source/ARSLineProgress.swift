@@ -281,9 +281,9 @@ private final class ARSInfiniteLoader: ARSLoader {
     @objc func orientationChanged(_ notification: Notification) {
         if let loader = ars_currentLoader {
             if let targetView = loader.targetView {
-                ars_createdFrameForBackgroundView(loader.backgroundView, onView: targetView)
+                _ = ars_createdFrameForBackgroundView(loader.backgroundView, onView: targetView)
             } else {
-                ars_createdFrameForBackgroundView(loader.backgroundView, onView: nil)
+                _ = ars_createdFrameForBackgroundView(loader.backgroundView, onView: nil)
             }
         }
     }
@@ -348,9 +348,9 @@ private final class ARSProgressLoader: ARSLoader {
     @objc func orientationChanged(_ notification: Notification) {
         if let loader = ars_currentLoader {
             if let targetView = loader.targetView {
-                ars_createdFrameForBackgroundView(loader.backgroundView, onView: targetView)
+                _ = ars_createdFrameForBackgroundView(loader.backgroundView, onView: targetView)
             } else {
-                ars_createdFrameForBackgroundView(loader.backgroundView, onView: nil)
+                _ = ars_createdFrameForBackgroundView(loader.backgroundView, onView: nil)
             }
         }
     }
@@ -525,7 +525,7 @@ private final class ARSStatus: ARSLoader {
     
     init() {
         backgroundView = ARSBlurredBackgroundRect().view
-        ars_createdFrameForBackgroundView(backgroundView, onView: nil)
+        _ = ars_createdFrameForBackgroundView(backgroundView, onView: nil)
     }
     
     static func show(_ type: ARSStatusType) {
